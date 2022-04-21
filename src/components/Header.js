@@ -1,21 +1,18 @@
-import {
-  TextField,
-  IconButton,
-  FormControl,
-  Button,
-  Avatar,
-} from "@mui/material";
-import mainLogo from "../YouTube-Logo.wine.svg";
+import { TextField, IconButton, Button, Avatar } from "@mui/material";
+import mainLogo from "../YouTube.svg";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useSelector } from "react-redux";
-// import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 const Header = () => {
   const user = useSelector((state) => state.user.user);
+  const navigate = useNavigate();
+
   return (
     <header style={headerStyle}>
-        <img src={mainLogo} style={imageStyle}/>
+      <img src={mainLogo} style={imageStyle} onClick={() => navigate("/")} />
       <TextField
         type="search"
         name="searchInput"
@@ -25,20 +22,28 @@ const Header = () => {
         InputProps={{
           endAdornment: (
             <IconButton>
-              {user.avatar ? (
-                <Avatar alt="profile" src={user.avatar} />
-              ) : (
-                <SearchIcon />
-              )}
+              <SearchIcon />
             </IconButton>
           ),
         }}
       />
-
-      <Button variant="outlined" href="http://localhost:5000/auth/google">
-        <AccountCircleIcon />
-        SIGN IN
-      </Button>
+      {user.name ? (
+        <>
+          <Button href="http://localhost:5000/api/logout">Log out</Button>
+          <Button onClick={() => navigate("/addvideo")} varient="contained">
+            Add Video
+          </Button>
+          <div style={{ display: "flex", alignItems: "center", color: "gray" }}>
+            <Avatar src={user.avatar} />
+            <small>{user.name?.split(" ")[0]}</small>
+          </div>
+        </>
+      ) : (
+        <Button variant="outlined" href="http://localhost:5000/auth/google">
+          <AccountCircleIcon />
+          SIGN IN
+        </Button>
+      )}
     </header>
   );
 };
